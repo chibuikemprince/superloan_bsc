@@ -13,7 +13,20 @@ const auth_1 = __importDefault(require("./routes/auth"));
 const loan_1 = __importDefault(require("./routes/loan"));
 //routes 
 const app = (0, express_1.default)();
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({
+    origin: '*',
+    /* [
+  "http://localhost",
+  "http://localhost:3000",
+  
+  ] */
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 200,
+    maxAge: 1000,
+    credentials: true,
+    allowedHeaders: 'Access-Control-Allow-Headers, Content-Type,Authorization,content-type, X-Requested-With,token',
+}));
 app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use(baseMiddleWare_1.baseMiddleware);

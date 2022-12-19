@@ -9,7 +9,25 @@ import bodyParser from 'body-parser';
  import LoanRoute from './routes/loan';
 //routes 
 const app: Application = express();
-app.use(cors());
+
+app.use(
+  cors({
+    origin: '*',
+    /* [
+  "http://localhost",
+  "http://localhost:3000", 
+  
+  ] */
+
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 200,
+    maxAge: 1000,
+    credentials: true,
+    allowedHeaders:
+      'Access-Control-Allow-Headers, Content-Type,Authorization,content-type, X-Requested-With,token',
+  })
+);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
