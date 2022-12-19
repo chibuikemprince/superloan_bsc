@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.schema = void 0;
 const mongoose_1 = require("mongoose");
 exports.schema = new mongoose_1.Schema({
-    name: {
+    type: {
         type: String,
         required: true
     },

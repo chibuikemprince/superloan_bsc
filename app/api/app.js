@@ -10,6 +10,7 @@ const errorReporting_1 = require("./helpers/errorReporting");
 const cors_1 = __importDefault(require("cors"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const auth_1 = __importDefault(require("./routes/auth"));
+const loan_1 = __importDefault(require("./routes/loan"));
 //routes 
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
@@ -18,6 +19,8 @@ app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use(baseMiddleWare_1.baseMiddleware);
 //auth
 app.use("/api", auth_1.default);
+//loan
+app.use("/api", loan_1.default);
 app.use('*', (req, res, next) => {
     var fullURL = req.protocol + '://' + req.get('host') + req.originalUrl;
     let notFoundRes = {
