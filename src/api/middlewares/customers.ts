@@ -52,7 +52,7 @@ class CustomerMiddleware{
 }
     catch(err:any){
       LogError({
-        msg:"Error found in createCategory() middleware",
+        msg:"Error found in CustomerMiddleware() middleware",
         status:"STRONG",
         time:new Date().toUTCString(),
         stack:<string>err,
@@ -118,7 +118,7 @@ class CustomerMiddleware{
     }
         catch(err:any){
           LogError({
-            msg:"Error found in createCategory() middleware",
+            msg:"Error found in CustomerMiddleware() middleware",
             status:"STRONG",
             time:new Date().toUTCString(),
             stack:<string>err,
@@ -186,7 +186,7 @@ class CustomerMiddleware{
         }
             catch(err:any){
               LogError({
-                msg:"Error found in createCategory() middleware",
+                msg:"Error found in CustomerMiddleware() middleware",
                 status:"STRONG",
                 time:new Date().toUTCString(),
                 stack:<string>err,
@@ -214,6 +214,59 @@ class CustomerMiddleware{
         
 
     
+            getAllUsers(req:Request,res:Response,next:NextFunction){
+                return new Promise((resolve:any, reject:any)=>{
+               
+                try{
+            
+            
+                   
+                  
+                     
+                    CustomerControllers.getAllUsers( )  
+                   //CategoryCrud.create(req.body.name, req.body.skills)
+                    .then( (done:RESPONSE_TYPE) =>{
+                        // console.log({done})
+                        
+                          response(res, done);
+                          return;
+                     })
+                     .catch((err:any)=>{
+                        console.log({err})
+                         response(res,err)
+                        //throw err;
+                     }) 
+                     
+                
+            
+            }
+                catch(err:any){
+                  LogError({
+                    msg:"Error found in CustomerMiddleware() middleware",
+                    status:"STRONG",
+                    time:new Date().toUTCString(),
+                    stack:<string>err,
+                    class:<string><unknown>this
+            
+                  })
+                  let feedback: RESPONSE_TYPE = {
+                    message:
+                      'error found, please try again. If this persists contact support',
+                    data: [],
+                    status: 500,
+                    statusCode: 'UNKNOWN_ERROR',
+                  };
+                  response(res, feedback);
+                  return;
+                }
+                    
+                
+                
+                
+                })
+                
+                }
+                
   
 }
 

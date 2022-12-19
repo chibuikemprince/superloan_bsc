@@ -1,6 +1,7 @@
 import { RESPONSE_TYPE } from "../helpers/customTypes";
 import BankAccounts from "../models/bank/accounts";
 import LoanRecords from "../models/loan/record";
+import LoanRepayment from "../models/loan/repayments";
 import BVNModel from "../models/bvn/bvn";
 import { getEnv } from "../helpers/env";
 // get bank accounts
@@ -81,11 +82,139 @@ else{
     }
 
 
+
+    loanRepayment(loanId:String):Promise<RESPONSE_TYPE> {
+
+        return new Promise((resolve:any, reject:any)=>{
+            //, populate: "record"
+            LoanRepayment.find({record:loanId}, null,{sort:{date:-1}},(err2:any, data:any)=>{
+    
+                if(err2){
+                    console.log(err2);
+                     let err:RESPONSE_TYPE ={
+                         data:[],
+                         message:"error occurred, please try again..",
+                         status:500,
+                         statusCode:"UNKNOWN_ERROR"
+                         }   
+                         
+                         reject(err);
+                         return;
+                  }
+                  else{
+    
+                    if(data.length){
+                        
+
+    
+    let success:RESPONSE_TYPE ={
+            data,
+            message:"loan repayment history returned.",
+            status:200,
+            statusCode:"SUCCESS"
+            }   
+            
+            resolve(success);
+            return;
+    
+                    } else{
+                        let success:RESPONSE_TYPE ={
+                            data:[],
+                            message:"You have not started payment yet.",
+                            status:200,
+                            statusCode:"SUCCESS"
+                            }   
+                            
+                            resolve(success);
+                            return;
+                    }
+    
+    
+    
+                  }
+                
+                }
+                    
+                    )
+    
+        }) 
+        
+        }
+
+    loanRecord(BVN:String):Promise<RESPONSE_TYPE> {
+
+        return new Promise((resolve:any, reject:any)=>{
+            
+            LoanRecords.find({BVN}, null,{sort:{date:-1}},(err2:any, data:any)=>{
+    
+                if(err2){
+                    console.log(err2);
+                     let err:RESPONSE_TYPE ={
+                         data:[],
+                         message:"error occurred, please try again..",
+                         status:500,
+                         statusCode:"UNKNOWN_ERROR"
+                         }   
+                         
+                         reject(err);
+                         return;
+                  }
+                  else{
+    
+                    if(data.length){
+                        
+
+    
+    let success:RESPONSE_TYPE ={
+            data: data.map((loan:any)=>{
+                let status = "not paid"
+                    if(data.amount == data.amount_paid){
+                        status = "paid"
+                    }
+                let newData:any = loan;
+                newData.status = status;
+                return newData;     
+                
+                 }),
+            message:"loan history returned.",
+            status:200,
+            statusCode:"SUCCESS"
+            }   
+            
+            resolve(success);
+            return;
+    
+                    } else{
+                        let success:RESPONSE_TYPE ={
+                            data:[],
+                            message:"You have not borrowed yet.",
+                            status:200,
+                            statusCode:"SUCCESS"
+                            }   
+                            
+                            resolve(success);
+                            return;
+                    }
+    
+    
+    
+                  }
+                
+                }
+                    
+                    )
+    
+        }) 
+        
+        }
+    
+
+
 getGetLoanOwed(BVN:String):Promise<RESPONSE_TYPE> {
 
     return new Promise((resolve:any, reject:any)=>{
         
-        LoanRecords.findOne({BVN}, null,(err2:any, data:any)=>{
+        LoanRecords.findOne({BVN}, null,{sort:{date:-1}},(err2:any, data:any)=>{
 
             if(err2){
                 console.log(err2);
@@ -103,7 +232,7 @@ getGetLoanOwed(BVN:String):Promise<RESPONSE_TYPE> {
 
                 if(data){
                     console.log({data})
-if(data.amount == data.amount_paid){
+if(data.amount <= data.amount_paid){
     let success:RESPONSE_TYPE ={
         data:[],
         message:"You have paid all loans.",
@@ -295,15 +424,43 @@ applyForLoan(amount:number, account_number:string, duration:number, reason:strin
 let monthly_interest = (amount*interest_rate)/100 ;
 let total_interest = (monthly_interest*duration)/30
 
-        new LoanRecords({
-            amount,
-            account_number,
+        
+
+
+
+
+            
+        this.getLoanStatus(BVN)
+        .then((black:any)=>{
+console.log({black})
+
+if(black.statusCode=="NOT_BLACKLISTED"){
+
+this.getGetLoanOwed(BVN)
+.then((owed:any)=>{
+    console.log({owed,BVN})
+if(owed.statusCode=="LOAN_PAID" || owed.statusCode=="NO_LOAN_OWED"){
+
+    console.log({
+    total_interest,
+    interest_rate,
+    monthly_interest,
+    amount,
+    account_number,
+    duration,
+    reason,
+    BVN
+})
+
+ new LoanRecords({
+            amount:amount+total_interest,
+            bank_account:account_number,
             duration,
             reason,
             BVN
         }).save()
 
-        BankAccounts.updateOne({BVN,account_number},{$inc:{balance:(amount+total_interest)} }, (err2:any, docs:any)=>{
+        BankAccounts.updateOne({BVN,account_number},{$inc:{balance:(amount)} }, (err2:any, docs:any)=>{
             if (err2){
                 console.log(err2)
                
@@ -339,6 +496,32 @@ let total_interest = (monthly_interest*duration)/30
 
 
 
+        }
+    
+else{
+    reject(owed)
+    return;
+}
+})
+.catch((err:any)=>{
+    reject(err);
+    return;
+})
+
+
+}
+else{
+    reject( black)
+    return;
+}
+        })
+        .catch((err:any)=>{
+            reject(err)
+            return;
+        })
+  
+
+
     }) 
     
     }
@@ -367,6 +550,12 @@ let total_interest = (monthly_interest*duration)/30
                 }
                 else{
               
+new LoanRepayment({
+    record: loanId,
+    amount, 
+   bank_account: account_number
+}).save()
+                    
                     let res:RESPONSE_TYPE ={
                         data:[],
                         message:`Amount(₦${amount}) successfully deducted from your account, to pay loan`,

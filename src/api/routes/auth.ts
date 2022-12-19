@@ -18,7 +18,8 @@ let pathRoute: Router = Router();
 pathRoute.post('/bvn/getotp', CustomerMiddleware.verifyBVN);
 pathRoute.post('/user/register', CustomerMiddleware.registration);
 pathRoute.post('/user/login', CustomerMiddleware.login);
- 
+pathRoute.get('/admin/getallusers', CustomerMiddleware.getAllUsers);
+
 //(req:Request,res:Response,next:NextFunction){
 
 export default baseRoute.use('/auth', pathRoute);

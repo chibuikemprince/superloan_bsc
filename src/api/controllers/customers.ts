@@ -327,7 +327,7 @@ register(BVN:String,otp:String, password:String) :Promise<RESPONSE_TYPE> {
             }
             
 
-            getAllUsers(email:String ) :Promise<RESPONSE_TYPE> {
+            getAllUsers(  ) :Promise<RESPONSE_TYPE> {
 
                 return new Promise((resolve:any, reject:any)=>{
                 

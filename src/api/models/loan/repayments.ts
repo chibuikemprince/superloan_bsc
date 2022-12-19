@@ -12,7 +12,7 @@ export interface Repayments extends Generic {
   amount: Number;
    
   date: Number;
- bank_account: {} | Types.ObjectId;
+ bank_account: String;
   
 
 
@@ -23,10 +23,11 @@ export const schema = new Schema<Repayments>(
     record: {
       type: Types.ObjectId,
       required: true,
+      ref:"Record"
     },
     
     bank_account: {
-        type: Types.ObjectId,
+        type: String,
         required: true,
       },
     amount :{

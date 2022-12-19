@@ -16,6 +16,11 @@ let pathRoute: Router = Router();
  */
   //create
 pathRoute.post('/user/getdata', LoanMiddleware.getCreditScore); 
+pathRoute.post('/user/apply', LoanMiddleware.applyForLoan); 
+pathRoute.get('/bank/accounts', LoanMiddleware.userBankAccounts); 
+pathRoute.get('/record', LoanMiddleware.loanRecord); 
+pathRoute.get('/repay/record', LoanMiddleware.loanRepayment); 
+pathRoute.post('/payLoan', LoanMiddleware.payLoan); 
 
 
 

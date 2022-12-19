@@ -248,7 +248,7 @@ class CustomersController {
             }
         });
     }
-    getAllUsers(email) {
+    getAllUsers() {
         return new Promise((resolve, reject) => {
             auth_1.default.find({}, null, { populate: "info" }, (err, data) => {
                 if (data) {

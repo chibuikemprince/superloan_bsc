@@ -4,7 +4,7 @@
       {
         "type": "savings",
         "BVN": "20012345678",
-        "account_number": "1020364573",
+        "account_number": "2020364573",
       "bank": "Access bank",
         "credit_score": 2000,
         "balance": 3000
@@ -20,7 +20,7 @@
             {
                 "type": "savings",
                 "BVN": "20012345678",
-                "account_number": "1020364573",
+                "account_number": "2030364573",
               "bank": "UBA",
                 "credit_score": 20000,
                 "balance": 3000

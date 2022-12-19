@@ -16,7 +16,7 @@ exports.schema = new mongoose_1.Schema({
         required: true,
     },
     bank_account: {
-        type: mongoose_1.Types.ObjectId,
+        type: String,
         required: true,
     },
     amount: {

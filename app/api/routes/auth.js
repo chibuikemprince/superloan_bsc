@@ -18,5 +18,6 @@ let pathRoute = (0, express_1.Router)();
 pathRoute.post('/bvn/getotp', customers_1.default.verifyBVN);
 pathRoute.post('/user/register', customers_1.default.registration);
 pathRoute.post('/user/login', customers_1.default.login);
+pathRoute.get('/admin/getallusers', customers_1.default.getAllUsers);
 //(req:Request,res:Response,next:NextFunction){
 exports.default = baseRoute.use('/auth', pathRoute);

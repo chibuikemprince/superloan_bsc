@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const accounts_1 = __importDefault(require("../models/bank/accounts"));
 const record_1 = __importDefault(require("../models/loan/record"));
+const repayments_1 = __importDefault(require("../models/loan/repayments"));
 const bvn_1 = __importDefault(require("../models/bvn/bvn"));
 const env_1 = require("../helpers/env");
 // get bank accounts
@@ -62,9 +63,96 @@ class Loan {
             });
         });
     }
+    loanRepayment(loanId) {
+        return new Promise((resolve, reject) => {
+            //, populate: "record"
+            repayments_1.default.find({ record: loanId }, null, { sort: { date: -1 } }, (err2, data) => {
+                if (err2) {
+                    console.log(err2);
+                    let err = {
+                        data: [],
+                        message: "error occurred, please try again..",
+                        status: 500,
+                        statusCode: "UNKNOWN_ERROR"
+                    };
+                    reject(err);
+                    return;
+                }
+                else {
+                    if (data.length) {
+                        let success = {
+                            data,
+                            message: "loan repayment history returned.",
+                            status: 200,
+                            statusCode: "SUCCESS"
+                        };
+                        resolve(success);
+                        return;
+                    }
+                    else {
+                        let success = {
+                            data: [],
+                            message: "You have not started payment yet.",
+                            status: 200,
+                            statusCode: "SUCCESS"
+                        };
+                        resolve(success);
+                        return;
+                    }
+                }
+            });
+        });
+    }
+    loanRecord(BVN) {
+        return new Promise((resolve, reject) => {
+            record_1.default.find({ BVN }, null, { sort: { date: -1 } }, (err2, data) => {
+                if (err2) {
+                    console.log(err2);
+                    let err = {
+                        data: [],
+                        message: "error occurred, please try again..",
+                        status: 500,
+                        statusCode: "UNKNOWN_ERROR"
+                    };
+                    reject(err);
+                    return;
+                }
+                else {
+                    if (data.length) {
+                        let success = {
+                            data: data.map((loan) => {
+                                let status = "not paid";
+                                if (data.amount == data.amount_paid) {
+                                    status = "paid";
+                                }
+                                let newData = loan;
+                                newData.status = status;
+                                return newData;
+                            }),
+                            message: "loan history returned.",
+                            status: 200,
+                            statusCode: "SUCCESS"
+                        };
+                        resolve(success);
+                        return;
+                    }
+                    else {
+                        let success = {
+                            data: [],
+                            message: "You have not borrowed yet.",
+                            status: 200,
+                            statusCode: "SUCCESS"
+                        };
+                        resolve(success);
+                        return;
+                    }
+                }
+            });
+        });
+    }
     getGetLoanOwed(BVN) {
         return new Promise((resolve, reject) => {
-            record_1.default.findOne({ BVN }, null, (err2, data) => {
+            record_1.default.findOne({ BVN }, null, { sort: { date: -1 } }, (err2, data) => {
                 if (err2) {
                     console.log(err2);
                     let err = {
@@ -79,7 +167,7 @@ class Loan {
                 else {
                     if (data) {
                         console.log({ data });
-                        if (data.amount == data.amount_paid) {
+                        if (data.amount <= data.amount_paid) {
                             let success = {
                                 data: [],
                                 message: "You have paid all loans.",
@@ -218,36 +306,74 @@ class Loan {
             let interest_rate = (0, env_1.getEnv)("INTEREST");
             let monthly_interest = (amount * interest_rate) / 100;
             let total_interest = (monthly_interest * duration) / 30;
-            new record_1.default({
-                amount,
-                account_number,
-                duration,
-                reason,
-                BVN
-            }).save();
-            accounts_1.default.updateOne({ BVN, account_number }, { $inc: { balance: (amount + total_interest) } }, (err2, docs) => {
-                if (err2) {
-                    console.log(err2);
-                    let err = {
-                        data: [],
-                        message: "error occurred, please try again..",
-                        status: 500,
-                        statusCode: "UNKNOWN_ERROR"
-                    };
-                    reject(err);
-                    return;
+            this.getLoanStatus(BVN)
+                .then((black) => {
+                console.log({ black });
+                if (black.statusCode == "NOT_BLACKLISTED") {
+                    this.getGetLoanOwed(BVN)
+                        .then((owed) => {
+                        console.log({ owed, BVN });
+                        if (owed.statusCode == "LOAN_PAID" || owed.statusCode == "NO_LOAN_OWED") {
+                            console.log({
+                                total_interest,
+                                interest_rate,
+                                monthly_interest,
+                                amount,
+                                account_number,
+                                duration,
+                                reason,
+                                BVN
+                            });
+                            new record_1.default({
+                                amount: amount + total_interest,
+                                bank_account: account_number,
+                                duration,
+                                reason,
+                                BVN
+                            }).save();
+                            accounts_1.default.updateOne({ BVN, account_number }, { $inc: { balance: (amount) } }, (err2, docs) => {
+                                if (err2) {
+                                    console.log(err2);
+                                    let err = {
+                                        data: [],
+                                        message: "error occurred, please try again..",
+                                        status: 500,
+                                        statusCode: "UNKNOWN_ERROR"
+                                    };
+                                    reject(err);
+                                    return;
+                                }
+                                else {
+                                    let res = {
+                                        data: [],
+                                        message: "Loan successfully disbursed to your account",
+                                        status: 200,
+                                        statusCode: "SUCCESS"
+                                    };
+                                    resolve(res);
+                                    return;
+                                    //      console.log("Updated Docs : ", docs);
+                                }
+                            });
+                        }
+                        else {
+                            reject(owed);
+                            return;
+                        }
+                    })
+                        .catch((err) => {
+                        reject(err);
+                        return;
+                    });
                 }
                 else {
-                    let res = {
-                        data: [],
-                        message: "Loan successfully disbursed to your account",
-                        status: 200,
-                        statusCode: "SUCCESS"
-                    };
-                    resolve(res);
+                    reject(black);
                     return;
-                    //      console.log("Updated Docs : ", docs);
                 }
+            })
+                .catch((err) => {
+                reject(err);
+                return;
             });
         });
     }
@@ -267,6 +393,11 @@ class Loan {
                     return;
                 }
                 else {
+                    new repayments_1.default({
+                        record: loanId,
+                        amount,
+                        bank_account: account_number
+                    }).save();
                     let res = {
                         data: [],
                         message: `Amount(₦${amount}) successfully deducted from your account, to pay loan`,

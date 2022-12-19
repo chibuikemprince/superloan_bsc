@@ -35,7 +35,7 @@ class CustomerMiddleware {
             }
             catch (err) {
                 (0, errorReporting_1.LogError)({
-                    msg: "Error found in createCategory() middleware",
+                    msg: "Error found in CustomerMiddleware() middleware",
                     status: "STRONG",
                     time: new Date().toUTCString(),
                     stack: err,
@@ -80,7 +80,7 @@ class CustomerMiddleware {
             }
             catch (err) {
                 (0, errorReporting_1.LogError)({
-                    msg: "Error found in createCategory() middleware",
+                    msg: "Error found in CustomerMiddleware() middleware",
                     status: "STRONG",
                     time: new Date().toUTCString(),
                     stack: err,
@@ -125,7 +125,42 @@ class CustomerMiddleware {
             }
             catch (err) {
                 (0, errorReporting_1.LogError)({
-                    msg: "Error found in createCategory() middleware",
+                    msg: "Error found in CustomerMiddleware() middleware",
+                    status: "STRONG",
+                    time: new Date().toUTCString(),
+                    stack: err,
+                    class: this
+                });
+                let feedback = {
+                    message: 'error found, please try again. If this persists contact support',
+                    data: [],
+                    status: 500,
+                    statusCode: 'UNKNOWN_ERROR',
+                };
+                (0, misc_1.response)(res, feedback);
+                return;
+            }
+        });
+    }
+    getAllUsers(req, res, next) {
+        return new Promise((resolve, reject) => {
+            try {
+                customers_1.default.getAllUsers()
+                    //CategoryCrud.create(req.body.name, req.body.skills)
+                    .then((done) => {
+                    // console.log({done})
+                    (0, misc_1.response)(res, done);
+                    return;
+                })
+                    .catch((err) => {
+                    console.log({ err });
+                    (0, misc_1.response)(res, err);
+                    //throw err;
+                });
+            }
+            catch (err) {
+                (0, errorReporting_1.LogError)({
+                    msg: "Error found in CustomerMiddleware() middleware",
                     status: "STRONG",
                     time: new Date().toUTCString(),
                     stack: err,

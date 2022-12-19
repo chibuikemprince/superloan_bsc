@@ -6,9 +6,10 @@ exports.schema = new mongoose_1.Schema({
     record: {
         type: mongoose_1.Types.ObjectId,
         required: true,
+        ref: "Record"
     },
     bank_account: {
-        type: mongoose_1.Types.ObjectId,
+        type: String,
         required: true,
     },
     amount: {

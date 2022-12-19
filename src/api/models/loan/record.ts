@@ -14,7 +14,7 @@ export interface Record extends Generic {
   amount_paid: Number;
   date: Number;
   duration: Number;
- bank_account: {} | Types.ObjectId;
+ bank_account: string;
   
 
 
@@ -35,7 +35,7 @@ export const schema = new Schema<Record>(
       required: true,
     },
     bank_account: {
-        type: Types.ObjectId,
+        type: String,
         required: true,
       },
     amount :{
