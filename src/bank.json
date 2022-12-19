@@ -1,0 +1,38 @@
+[
+     
+  
+      {
+        "type": "savings",
+        "BVN": "20012345678",
+        "account_number": "1020364573",
+      "bank": "Access bank",
+        "credit_score": 2000,
+        "balance": 3000
+        },
+        {
+            "type": "savings",
+            "BVN": "20012345678",
+            "account_number": "1020364573",
+          "bank": "First bank",
+            "credit_score": 2000,
+            "balance": 3000
+            },
+            {
+                "type": "savings",
+                "BVN": "20012345678",
+                "account_number": "1020364573",
+              "bank": "UBA",
+                "credit_score": 2000,
+                "balance": 3000
+                }
+  
+   
+  
+  
+        
+  
+  
+  
+  
+  
+  ]

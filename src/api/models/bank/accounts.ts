@@ -8,7 +8,7 @@ import Generic from '../entities/generics';
 export interface Bank extends Generic {
 
 
-  name: string;
+  type: string;
   BVN: string;
   account_number: Number;
 bank: string;
@@ -20,7 +20,7 @@ bank: string;
 
 export const schema = new Schema<Bank>(
   {
-    name: {
+    type: {
       type: String,
       required: true
     },
