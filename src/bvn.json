@@ -1,0 +1,56 @@
+[
+
+    {
+        "name": "Chibuikem Prince Chisomaga",
+        "profileimage": "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "blacklisted": false,
+        "state_origin": "Enugu",
+        "lga_origin": "Isi-Uzo",
+        "nin": "12345678901",
+        "phone": "+2348066934496",
+        "email": "youngprince042@gmail.com",
+        "dob": "10-10-1991",
+        "address": "NO 10 Sporty, National stadium Enugu",
+        "occupation": "Business",
+        "next_kin": "Favour",
+        "next_kin_phone": "+2348066934497",
+        "marital_status":"single",
+        "landmark":"National Statdium, Enugu",
+        "gender":"male",
+        "nationality":"Nigeria",
+        "BVN":"20012345678"
+       
+      },
+
+
+      {
+        "name": "Eze Paul Emeka",
+        "profileimage": "https://images.pexels.com/photos/697509/pexels-photo-697509.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "blacklisted": false,
+        "state_origin": "Enugu",
+        "lga_origin": "Isi-Uzo",
+        "nin": "12345678231",
+        "phone": "+2348066934499",
+        "email": "user2@gmail.com",
+        "dob": "10-10-1991",
+        "address": "NO 10 Sporty, National Playground Enugu",
+        "occupation": "Business",
+        "next_kin": "Stella",
+        "next_kin_phone": "+2348066934997",
+        "marital_status":"single",
+        "landmark":"National Playground, Enugu",
+        "gender":"male",
+        "nationality":"Nigeria",
+        "BVN":"20012345699"
+       
+      }
+      
+
+
+      
+
+
+
+
+
+]
