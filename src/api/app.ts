@@ -6,6 +6,7 @@ import { LogError, ErrorDataType } from './helpers/errorReporting';
 import cors from 'cors';
 import bodyParser from 'body-parser';
  import auth from './routes/auth';
+ import LoanRoute from './routes/loan';
 //routes 
 const app: Application = express();
 app.use(cors());
@@ -17,6 +18,9 @@ app.use(baseMiddleware);
 //auth
 app.use("/api",auth)
   
+//loan
+app.use("/api",LoanRoute)
+
 
 app.use('*', (req: Request, res: Response, next: NextFunction) => {
   var fullURL = req.protocol + '://' + req.get('host') + req.originalUrl;

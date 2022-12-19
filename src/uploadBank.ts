@@ -7,9 +7,10 @@ import Bank from "./api/models/bank/accounts";
 
 const personFile = path.resolve(__dirname,"./bank.json")
 // Database connection
-//mongodb://127.0.0.1:27017/loan
+//
 
-mongoose.connect('mongodb+srv://chixcom:lq3NI6Y1oGkbHkyh@cluster0.spyy1.gcp.mongodb.net/?retryWrites=true&w=majority', {
+//mongoose.connect('mongodb+srv://chixcom:lq3NI6Y1oGkbHkyh@cluster0.spyy1.gcp.mongodb.net/?retryWrites=true&w=majority', {
+    mongoose.connect('mongodb://127.0.0.1:27017/loan', {
 	useNewUrlParser: true ,
 	useUnifiedTopology: true
 })
