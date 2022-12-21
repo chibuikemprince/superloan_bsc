@@ -112,8 +112,8 @@ register(BVN:String,otp:String, password:String) :Promise<RESPONSE_TYPE> {
     return new Promise((resolve:any, reject:any)=>{
     
     if(BVN.length && otp.length && password.length){
-        verifyBVN.findOne({BVN, code:otp, expiry:{$gte:Date.now()}}, null,(err:any, data:any)=>{
-      
+        verifyBVN.findOne({BVN, code:otp}, null,(err:any, data:any)=>{
+      //, expiry:{$gte:Date.now()}
     console.log({BVN, code:otp, expiry:{$gte:Date.now()}})
 
              if(data){
@@ -213,14 +213,22 @@ register(BVN:String,otp:String, password:String) :Promise<RESPONSE_TYPE> {
                     decodePwd(password, data.password)
                     .then((hash:any)=>{
                     
-
-                        let success:RESPONSE_TYPE ={
-                            data:[data],
-                            message:"successful.",
-                            status:200,
-                            statusCode:"SUCCESS"
-                            }   
-                            
+console.log({hash})
+let success:RESPONSE_TYPE ={
+    data:[],
+    message:"invalid login data.",
+    status:401,
+    statusCode:"FORM_REQUIREMENT_ERROR"
+    }   
+if(hash)
+{
+      success ={
+        data:[data],
+        message:"successful.",
+        status:200,
+        statusCode:"SUCCESS"
+        }   
+}                           
                             resolve(success);
                             return;
 
